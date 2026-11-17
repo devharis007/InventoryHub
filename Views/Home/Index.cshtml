@@ -1,0 +1,225 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div id="dashboard-app" style="display: none;">
+
+    <!-- Stat cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value" data-bind="text: totalProducts"></div>
+                </div>
+                <div class="stat-icon bg-brand"><i class="bi bi-box-seam"></i></div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Total Stock Value</div>
+                    <div class="stat-value" data-bind="text: totalStockValueFormatted"></div>
+                </div>
+                <div class="stat-icon bg-success"><i class="bi bi-currency-dollar"></i></div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Low Stock Items</div>
+                    <div class="stat-value" data-bind="text: lowStockCount"></div>
+                </div>
+                <div class="stat-icon bg-warning"><i class="bi bi-exclamation-triangle"></i></div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Categories</div>
+                    <div class="stat-value" data-bind="text: categories().length"></div>
+                </div>
+                <div class="stat-icon bg-info"><i class="bi bi-tags"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="card-panel p-3 mb-3">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Search by name or SKU..."
+                       data-bind="textInput: searchTerm" />
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" data-bind="options: categories, optionsText: 'name', optionsValue: 'id', optionsCaption: 'All Categories', value: selectedCategoryId"></select>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check pt-2">
+                    <input class="form-check-input" type="checkbox" id="lowStockOnly" data-bind="checked: showLowStockOnly" />
+                    <label class="form-check-label" for="lowStockOnly">Low stock only</label>
+                </div>
+            </div>
+            <div class="col-md-2 text-md-end">
+                <button type="button" class="btn btn-primary w-100" data-bind="click: openAddModal">
+                    <i class="bi bi-plus-lg"></i> Add Product
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error / status banner -->
+    <div class="alert alert-danger" role="alert" data-bind="visible: errorMessage, text: errorMessage" style="display:none;"></div>
+
+    <!-- Product table -->
+    <div class="card-panel">
+        <div class="table-responsive">
+            <table class="table table-inventory mb-0">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Category</th>
+                        <th class="text-end">Price</th>
+                        <th class="text-center">Stock</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Adjust</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: filteredProducts">
+                    <tr data-bind="css: { 'low-stock-row': isLowStock }">
+                        <td>
+                            <div class="fw-semibold" data-bind="text: name"></div>
+                        </td>
+                        <td><span class="sku-text" data-bind="text: sku"></span></td>
+                        <td data-bind="text: categoryName"></td>
+                        <td class="text-end" data-bind="text: priceFormatted"></td>
+                        <td class="text-center">
+                            <span class="qty-value" data-bind="text: quantityInStock"></span>
+                            <div class="text-muted small">min <span data-bind="text: reorderThreshold"></span></div>
+                        </td>
+                        <td class="text-center">
+                            <!-- ko if: isLowStock -->
+                            <span class="badge badge-low-stock">LOW STOCK</span>
+                            <!-- /ko -->
+                            <!-- ko ifnot: isLowStock -->
+                            <span class="badge badge-ok-stock">OK</span>
+                            <!-- /ko -->
+                        </td>
+                        <td class="text-center">
+                            <div class="qty-adjust-group">
+                                <button type="button" class="btn btn-outline-danger" title="Decrease stock by 1"
+                                        data-bind="click: $parent.decrementStock, enable: quantityInStock() > 0">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-success" title="Increase stock by 1"
+                                        data-bind="click: $parent.incrementStock">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" title="Custom stock adjustment"
+                                        data-bind="click: $parent.openAdjustModal">
+                                    <i class="bi bi-sliders"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bind="click: $parent.openEditModal">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bind="click: $parent.confirmDeleteProduct">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- ko if: filteredProducts().length === 0 -->
+            <div class="loading-overlay" data-bind="text: products().length === 0 ? 'Loading products...' : 'No products match your filters.'"></div>
+            <!-- /ko -->
+        </div>
+    </div>
+
+    <!-- Add / Edit Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form data-bind="submit: saveProduct">
+                    <div class="modal-header">
+                        <h5 class="modal-title" data-bind="text: isEditing() ? 'Edit Product' : 'Add Product'"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger py-2" data-bind="visible: formError, text: formError" style="display:none;"></div>
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" data-bind="textInput: formModel().name" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SKU</label>
+                            <input type="text" class="form-control" data-bind="textInput: formModel().sku" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" data-bind="options: categories, optionsText: 'name', optionsValue: 'id', value: formModel().categoryId"></select>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Price ($)</label>
+                                <input type="number" step="0.01" min="0" class="form-control" data-bind="textInput: formModel().price" required />
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Reorder Threshold</label>
+                                <input type="number" min="0" class="form-control" data-bind="textInput: formModel().reorderThreshold" required />
+                            </div>
+                        </div>
+                        <div class="mb-1" data-bind="visible: !isEditing()">
+                            <label class="form-label">Initial Stock Quantity</label>
+                            <input type="number" min="0" class="form-control" data-bind="textInput: formModel().quantityInStock" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock Adjustment Modal -->
+    <div class="modal fade" id="adjustModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form data-bind="submit: submitAdjustment">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Adjust Stock &mdash; <span data-bind="text: adjustModel().productName"></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger py-2" data-bind="visible: formError, text: formError" style="display:none;"></div>
+                        <p class="text-muted">Current stock: <strong data-bind="text: adjustModel().currentQuantity"></strong></p>
+                        <div class="mb-3">
+                            <label class="form-label">Change Amount</label>
+                            <input type="number" class="form-control" data-bind="textInput: adjustModel().changeAmount" required />
+                            <div class="form-text">Use a positive number to add stock, negative to remove.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Reason</label>
+                            <select class="form-select" data-bind="options: adjustmentReasons, value: adjustModel().reason"></select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Apply Adjustment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/inventory.js" asp-append-version="true"></script>
+}

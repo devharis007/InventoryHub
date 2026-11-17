@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "About";
+}
+
+<div class="card-panel p-4">
+    <h2 class="mb-3">About InventoryHub</h2>
+    <p>
+        InventoryHub is a portfolio project demonstrating a working inventory / stock
+        management admin dashboard built with <strong>ASP.NET Core MVC</strong> and
+        <strong>Entity Framework Core</strong> (SQLite), with a reactive client-side
+        layer powered by <strong>Knockout.js</strong>.
+    </p>
+    <p>
+        The interactive parts of the dashboard &mdash; the product list, search/filter,
+        add/edit modals, and inline stock adjustments &mdash; are all driven by Knockout
+        observables bound to JSON data fetched from MVC API controllers under
+        <code>/api/products</code>, <code>/api/categories</code>, and
+        <code>/api/stockmovements</code>. No full-page reloads are required for CRUD
+        operations.
+    </p>
+    <h5 class="mt-4">Tech Stack</h5>
+    <ul>
+        <li>ASP.NET Core MVC (C#, .NET 10)</li>
+        <li>Entity Framework Core with the SQLite provider</li>
+        <li>Knockout.js for observable-based two-way data binding</li>
+        <li>Bootstrap 5 for layout and styling</li>
+    </ul>
+    <p class="text-muted mb-0">
+        Source code: <a href="https://github.com/harisebex/InventoryHub" target="_blank" rel="noopener">github.com/harisebex/InventoryHub</a>
+    </p>
+</div>

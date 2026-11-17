@@ -1,0 +1,237 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+:root {
+  --sidebar-width: 240px;
+  --brand: #2f6fed;
+  --brand-dark: #1f4fb8;
+  --surface: #f5f7fb;
+  --danger-bg: #fdecec;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface);
+}
+
+/* ---------- App shell / sidebar layout ---------- */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #16213e 0%, #0f1729 100%);
+  color: #cfd8ec;
+  padding: 1.25rem 0.75rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  gap: 0.25rem;
+}
+
+.sidebar-nav .nav-link {
+  color: #b7c2dd;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 1.05rem;
+  width: 1.2rem;
+  text-align: center;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar-nav .nav-link.active {
+  background: var(--brand);
+  color: #fff;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 0.5rem;
+  color: #7c88a8;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #e6e9f0;
+  padding: 1rem 1.75rem;
+}
+
+.topbar-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1c2536;
+}
+
+.content-body {
+  padding: 1.75rem;
+  flex: 1;
+}
+
+.app-footer {
+  padding: 1rem 1.75rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- Dashboard stat cards ---------- */
+.stat-card {
+  background: #fff;
+  border: 1px solid #e6e9f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  height: 100%;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+}
+
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7c88a8;
+  font-weight: 600;
+}
+
+.stat-card .stat-value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #1c2536;
+  margin-top: 0.25rem;
+}
+
+.stat-card .stat-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.stat-icon.bg-brand { background: var(--brand); }
+.stat-icon.bg-success { background: #2fa86a; }
+.stat-icon.bg-warning { background: #e3a13a; }
+.stat-icon.bg-info { background: #3ab0c9; }
+
+/* ---------- Product table ---------- */
+.card-panel {
+  background: #fff;
+  border: 1px solid #e6e9f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+}
+
+.table-inventory thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #7c88a8;
+  border-bottom: 2px solid #eef0f5;
+  white-space: nowrap;
+}
+
+.table-inventory td {
+  vertical-align: middle;
+}
+
+.table-inventory tbody tr.low-stock-row {
+  background-color: var(--danger-bg);
+}
+
+.badge-low-stock {
+  background-color: #e03131;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.badge-ok-stock {
+  background-color: #2fa86a;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+
+.qty-adjust-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.qty-adjust-group .btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  line-height: 1;
+  border-radius: 0.4rem;
+}
+
+.qty-value {
+  min-width: 2.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.sku-text {
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 0.85rem;
+  color: #556;
+}
+
+.loading-overlay {
+  text-align: center;
+  padding: 2rem;
+  color: #7c88a8;
+}
