@@ -27,7 +27,17 @@ common in real-world ASP.NET shops, alongside modern .NET backend practices.
 
 ## Screenshots
 
-_Screenshots coming soon — run the project locally to see the live dashboard._
+**Dashboard** — live stats, instant search, category filter, and inline stock controls
+
+![InventoryHub dashboard](docs/screenshots/dashboard.png)
+
+**Low-stock view** — products below their reorder threshold are flagged
+
+![Low-stock filter](docs/screenshots/low-stock.png)
+
+**Stock adjustment** — every change is recorded as a stock movement with a reason
+
+![Adjust stock modal](docs/screenshots/adjust-stock.png)
 
 ## Project Structure
 
